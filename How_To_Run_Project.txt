@@ -1,0 +1,71 @@
+---- DELUX SUPER MART ----
+
+PROJECT REQUIREMENTS
+
+* Python 3.x
+* Django
+* MySQL Server
+* MySQL Workbench (optional)
+
+IMPORTANT:
+Update the MySQL password in Scripts/config/settings.py
+before running the application.
+
+INSTALL DEPENDENCIES
+
+pip install -r requirements.txt
+
+DATABASE SETUP
+
+1. Create a MySQL database named:
+
+super_market
+
+2. Import the backup database:
+
+mysql -u root -p super_market < super_market_backup.sql
+
+RUN THE APPLICATION
+
+python manage.py runserver
+
+ACCESS THE WEBSITE
+
+Customer Registration:
+http://127.0.0.1:8000/register/
+
+Customer / Admin Login:
+http://127.0.0.1:8000/login/
+
+Admin Dashboard:
+http://127.0.0.1:8000/admin-dashboard/
+
+FEATURES
+
+* Customer Registration and Login
+* Admin Login and Dashboard
+* Product Categories
+* Product Images
+* Shopping Cart
+* Quantity Management
+* Dynamic Price Calculation
+* Invoice Generation
+* Inventory Management
+* Weekly Sales Analytics
+* Age-Based Product Restrictions
+* Gender-Based Product Restrictions
+* Dark/Light Theme Toggle
+
+PROJECT STRUCTURE
+
+Docs/
+Screenshots and project documentation
+
+Scripts/
+Django application source code
+
+README.md
+Project overview and feature documentation
+
+How_To_Run_Project.txt
+Setup and execution instructions

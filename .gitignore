@@ -1,0 +1,20 @@
+# Virtual Environment
+venv/
+
+# Python Cache Files
+__pycache__/
+*.pyc
+
+# IDE Settings
+.idea/
+.vscode/
+
+# Environment Files
+.env
+
+# Local SQLite Database
+db.sqlite3
+
+# Operating System Files
+Thumbs.db
+.DS_Store
