@@ -1,0 +1,162 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block content %}
+
+<div style="background-color: #7C5C3B; padding: 40px; border-radius: 8px; color: white;">
+
+    {% if success %}
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h1 style="margin: 0;">🧾 Tax Invoice</h1>
+
+            <!-- Download PDF Button -->
+            <a href="{% url 'download_invoice' bill.bill_id %}"
+               style="display:inline-block;
+                      padding:12px 25px;
+                      background-color:#28a745;
+                      color:white;
+                      text-decoration:none;
+                      border-radius:4px;
+                      font-weight:bold;
+                      font-size:16px;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                📥 Download PDF
+            </a>
+        </div>
+    {% else %}
+        <h1 style="text-align:center;">📦 Order Status</h1>
+    {% endif %}
+
+    <div style="height: 4px; width: 120px; background-color: #87CEEB; margin: 20px auto 30px auto; border-radius: 4px;"></div>
+
+    {% if success %}
+        <!-- Formal Invoice Container -->
+        <div style="background-color:white; color:black; padding:40px; border-radius:8px; margin-bottom:30px; font-family: 'Courier New', monospace; border: 2px solid #333;">
+
+            <!-- Invoice Header -->
+            <div style="display: flex; justify-content: space-between; margin-bottom: 30px; border-bottom: 2px dashed #333; padding-bottom: 20px;">
+                <div>
+                    <h2 style="margin:0; color:#7C5C3B; font-size:28px;">DELUX SUPERSTORE</h2>
+                    <p style="margin:5px 0 0 0; font-size:14px;">123 Business Avenue, City - 400001</p>
+                    <p style="margin:2px 0; font-size:14px;">GST: 27ABCDE1234F1Z5 | Email: support@deluxstore.com</p>
+                </div>
+                <div style="text-align: right;">
+                    <h3 style="margin:0; font-size:22px;">{{ bill.bill_number }}</h3>
+                    <p style="margin:5px 0 0 0; font-size:14px;">Date: {{ bill.bill_date|date:"d M Y, h:i A" }}</p>
+                </div>
+            </div>
+
+            <!-- Customer Details -->
+            <div style="margin-bottom: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 4px;">
+                <h3 style="margin:0 0 10px 0; color:#7C5C3B;">Bill To:</h3>
+                <p style="margin:5px 0;"><strong>Name:</strong> {{ customer.customer_name }}</p>
+                <p style="margin:5px 0;"><strong>Username:</strong> {{ request.user.username }}</p>
+                <p style="margin:5px 0;"><strong>Customer ID:</strong> CUST{{ customer.customer_id|stringformat:"04d" }}</p>
+            </div>
+
+            <!-- Invoice Items Table -->
+            <table style="width:100%; border-collapse: collapse; margin-bottom: 30px;">
+                <thead>
+                    <tr style="background-color: #7C5C3B; color: white;">
+                        <th style="padding:12px; text-align:left;">#</th>
+                        <th style="padding:12px; text-align:left;">Product</th>
+                        <th style="padding:12px; text-align:center;">Quantity</th>
+                        <th style="padding:12px; text-align:right;">Unit Price</th>
+                        <th style="padding:12px; text-align:right;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order_items %}
+                    <tr style="border-bottom: 1px solid #dee2e6;">
+                        <td style="padding:10px;">{{ forloop.counter }}</td>
+                        <td style="padding:10px;">{{ item.product.product_name }}</td>
+                        <td style="padding:10px; text-align:center;">{{ item.quantity }}</td>
+                        <td style="padding:10px; text-align:right;">₹{{ item.product.price }}</td>
+                        <td style="padding:10px; text-align:right; font-weight:bold;">₹{{ item.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Total Section -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 30px;">
+                <div style="width: 300px;">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span>Subtotal:</span>
+                        <span>₹{{ total }}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span>Tax (0%):</span>
+                        <span>₹0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 15px 0; border-top: 2px solid #333; font-size: 18px; font-weight: bold;">
+                        <span>Grand Total:</span>
+                        <span style="color:#7C5C3B;">₹{{ total }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Status -->
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 20px; border-top: 2px dashed #333;">
+                <div>
+                    <span style="background-color: #28a745; color:white; padding:8px 15px; border-radius:4px; font-weight:bold;">✅ PAID</span>
+                </div>
+                <div style="text-align: right;">
+                    <p style="margin:0;">Authorized Signature</p>
+                    <p style="margin:5px 0 0 0; font-family: 'Brush Script MT', cursive; font-size:24px;">Delux Store</p>
+                </div>
+            </div>
+
+            <!-- Footer Note -->
+            <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #666;">
+                <p>This is a computer generated invoice - No signature required</p>
+                <p>Thank you for shopping with us! Visit again.</p>
+            </div>
+
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="text-align:center; margin-top:30px;">
+
+            <a href="{% url 'store_page' %}"
+               style="display:inline-block;
+                      padding:12px 25px;
+                      background-color:#87CEEB;
+                      color:#1e3a5f;
+                      text-decoration:none;
+                      border-radius:4px;
+                      font-weight:bold;
+                      margin-right:15px;">
+                🛍️ Continue Shopping
+            </a>
+
+            <a href="{% url 'customer_dashboard' %}"
+               style="display:inline-block;
+                      padding:12px 25px;
+                      background-color:#87CEEB;
+                      color:#1e3a5f;
+                      text-decoration:none;
+                      border-radius:4px;
+                      font-weight:bold;">
+                📋 Back to Dashboard
+            </a>
+
+        </div>
+
+    {% else %}
+        <!-- Error or Redirect State -->
+        <div style="background-color:white; color:black; padding:40px; border-radius:8px; text-align:center;">
+            <p style="font-size:1.2em;">Processing your order...</p>
+            <p>Redirecting to cart in 3 seconds...</p>
+        </div>
+
+        <!-- Auto-redirect to cart after 3 seconds -->
+        <meta http-equiv="refresh" content="3;url={% url 'cart' %}">
+
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{% url 'cart' %}" style="color:#87CEEB;">Click here if not redirected</a>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<style>
+    .admin-container {
+        background-color: #3f51b5;
+        padding: 25px;
+        border-radius: 8px;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode .admin-container {
+        background-color: #1a202c;
+    }
+
+    .admin-heading {
+        margin-top: 0;
+        font-size: 42px;
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-align: left;
+        color: #ff5f00;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        margin-bottom: 10px;
+        transition: color 0.3s ease;
+    }
+
+    body.dark-mode .admin-heading {
+        color: #ff8c42;
+    }
+
+    .admin-welcome {
+        font-size: 18px;
+        margin-top: 5px;
+    }
+
+    .admin-divider {
+        height: 4px;
+        width: 80px;
+        background-color: #F4B400;
+        margin: 15px 0;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode .admin-divider {
+        background-color: #ffb74d;
+    }
+
+    .admin-buttons {
+        margin-bottom: 20px;
+    }
+
+    /* All admin buttons - F4B400 background with black text */
+    .admin-btn {
+        display: inline-block;
+        padding: 10px 18px;
+        background-color: #F4B400;
+        color: black;
+        text-decoration: none;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode .admin-btn {
+        background-color: #ffb74d;
+        color: black;
+    }
+
+    .admin-btn:hover {
+        opacity: 0.9;
+    }
+
+    .products-table-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 6px;
+        margin-top: 10px;
+        color: black;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        overflow-x: auto;
+    }
+
+    body.dark-mode .products-table-container {
+        background-color: #2d3748;
+        color: #e2e8f0;
+    }
+
+    .products-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: center;
+    }
+
+    .products-table th {
+        background-color: #F4B400;
+        color: #1a1a1a;
+        padding: 10px;
+    }
+
+    body.dark-mode .products-table th {
+        background-color: #ffb74d;
+        color: #1a1a1a;
+    }
+
+    .products-table td {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    body.dark-mode .products-table td {
+        border-bottom-color: #4a5568;
+    }
+
+    .no-products {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
+<div class="admin-container">
+    <h1 class="admin-heading">
+        WELCOME TO DELUX SUPERSTORE ADMIN 👔
+    </h1>
+
+    <p class="admin-welcome">Welcome Admin {{ request.user.username }}</p>
+
+    <div class="admin-divider"></div>
+
+    <div class="admin-buttons">
+        <a href="{% url 'add_category' %}" class="admin-btn">
+            + Add Category
+        </a>
+
+        <a href="{% url 'manage_categories' %}" class="admin-btn">
+            Manage Categories
+        </a>
+
+        <a href="{% url 'add_product' %}" class="admin-btn">
+            + Add Product
+        </a>
+
+        <a href="{% url 'manage_products' %}" class="admin-btn">
+            Manage Products
+        </a>
+
+        <a href="{% url 'manage_hero_images' %}" class="admin-btn">
+            🖼️ Manage Hero Images
+        </a>
+
+        <a href="{% url 'admin_statistics' %}" class="admin-btn">
+            📊 Weekly Statistics
+        </a>
+    </div>
+
+    <div class="products-table-container">
+        {% if products %}
+        <table class="products-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Gender</th>
+                    <th>18+</th>
+                    <th>Category</th>
+                  </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.product_id }}</td>
+                    <td>{{ product.product_name }}</td>
+                    <td>₹{{ product.price }}</td>
+                    <td>{{ product.stock_quantity }}</td>
+                    <td>{{ product.allowed_gender }}</td>
+                    <td>
+                        {% if product.is_adult_only %}
+                            Yes
+                        {% else %}
+                            No
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if product.category %}
+                            {{ product.category.category_name }}
+                        {% else %}
+                            No Category
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p class="no-products">No products available.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

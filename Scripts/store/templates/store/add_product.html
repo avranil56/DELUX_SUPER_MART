@@ -1,0 +1,115 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<div style="background-color: #3f51b5; padding: 25px; border-radius: 8px; color: white;">
+
+    <h2 style="margin-top: 0;">Add Product</h2>
+
+    <div style="height: 4px; width: 80px; background-color: #F4B400; margin: 15px 0 20px 0; border-radius: 4px;"></div>
+
+    {% if error %}
+        <p style="color: #ffdddd; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+
+    <div style="background-color: white; padding: 25px; border-radius: 6px; color: black;">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Product Name -->
+            <input type="text" name="product_name" placeholder="Product Name" required
+                   style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;"><br>
+
+            <!-- Price -->
+            <input type="number" step="0.01" name="price" placeholder="Price" required
+                   style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;"><br>
+
+            <!-- Stock Quantity -->
+            <input type="number" name="stock_quantity" placeholder="Stock Quantity" required
+                   style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;"><br>
+
+            <!-- Allowed Gender -->
+            <label style="display: block; margin-bottom: 8px; font-weight: bold;">Allowed Gender:</label>
+            <select name="allowed_gender" style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                <option value="ALL">ALL</option>
+                <option value="M">M</option>
+                <option value="F">F</option>
+            </select><br>
+
+            <!-- Category -->
+            <label style="display: block; margin-bottom: 8px; font-weight: bold;">Category:</label>
+            <select name="category_id" style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 15px;">
+                {% for category in categories %}
+                    <option value="{{ category.category_id }}">
+                        {{ category.category_name }}
+                    </option>
+                {% endfor %}
+            </select><br>
+
+            <!-- 18+ Product Checkbox -->
+            <label style="display: block; margin-bottom: 15px;">
+                <input type="checkbox" name="is_adult_only" style="margin-right: 8px;">
+                18+ Product
+            </label>
+
+            <!-- NEW: Product Sprite Upload -->
+            <label style="display: block; margin-bottom: 8px; font-weight: bold;">Product Sprite (Pixel Art / Image):</label>
+            <input type="file" name="product_sprite" accept="image/*"
+                   style="padding: 12px; width: 100%; max-width: 400px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 15px; background-color: #f8f9fa;">
+            <p style="font-size: 12px; color: #666; margin-top: -10px; margin-bottom: 15px;">
+                Recommended: Square image (200x200px). Will be automatically resized to fit product card.
+            </p>
+
+            <!-- Preview Area for Sprite -->
+            <div id="spritePreview" style="display: none; margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: bold;">Preview:</label>
+                <img id="previewImage" src="#" alt="Sprite Preview" style="max-width: 150px; max-height: 150px; border: 2px solid #3f51b5; border-radius: 8px; padding: 5px;">
+            </div>
+
+            <button type="submit" style="padding: 12px 25px; background-color:#F4B400; border:none; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom: 20px;">
+                Add Product
+            </button>
+        </form>
+
+        <!-- Back to Dashboard Button (Grey) at Bottom Center -->
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="{% url 'admin_dashboard' %}"
+               style="display:inline-block;
+                      padding:12px 25px;
+                      background-color:#6B6B6B;
+                      color:white;
+                      text-decoration:none;
+                      border-radius:4px;
+                      font-weight:bold;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                ← Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    // Image preview functionality
+    const fileInput = document.querySelector('input[name="product_sprite"]');
+    const previewDiv = document.getElementById('spritePreview');
+    const previewImage = document.getElementById('previewImage');
+
+    fileInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewDiv.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewDiv.style.display = 'none';
+        }
+    });
+</script>
+
+{% endblock %}

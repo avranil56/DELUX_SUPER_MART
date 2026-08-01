@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Store Management System</title>
+
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* Dark Mode CSS Variables for Global Pages */
+        :root {
+            --global-page-bg: #f4f6f9;
+            --global-text-color: #333;
+            --global-navbar-bg: #2c3e50;
+            --global-container-bg: transparent;
+            --global-border-color: #ddd;
+        }
+
+        body.dark-mode {
+            --global-page-bg: #1a1a2e;
+            --global-text-color: #e0e0e0;
+            --global-navbar-bg: #16213e;
+            --global-container-bg: transparent;
+            --global-border-color: #2c3e50;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--global-page-bg);
+            color: var(--global-text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--global-navbar-bg);
+            padding: 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+
+        .container {
+            padding: 0;
+            margin: 0;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Messages styles */
+        .messages-container {
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .message-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .message-info {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .message-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        body.dark-mode .message-success {
+            background-color: #1e4620;
+            color: #a5d6a5;
+            border-color: #2e7d32;
+        }
+
+        body.dark-mode .message-error {
+            background-color: #862020;
+            color: #ffb3b3;
+            border-color: #d32f2f;
+        }
+
+        body.dark-mode .message-info {
+            background-color: #1a3a5c;
+            color: #b3e0ff;
+            border-color: #1976d2;
+        }
+
+        body.dark-mode .message-warning {
+            background-color: #7a6300;
+            color: #ffe680;
+            border-color: #f9a825;
+        }
+
+        /* Global Floating Elements */
+        .global-floating-lightbulb {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 2px solid white;
+        }
+
+        .global-floating-lightbulb i {
+            font-size: 24px;
+            color: #333;
+        }
+
+        .global-floating-lightbulb:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .global-floating-cart {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            border: 2px solid white;
+            text-decoration: none;
+            animation: colorFlicker 2.5s infinite;
+            background-color: #ff4b08;
+        }
+
+        .global-floating-cart:hover {
+            transform: translateY(-50%) scale(1.1);
+            animation: none;
+        }
+
+        .global-floating-cart i {
+            font-size: 28px;
+            color: white;
+        }
+
+        @keyframes colorFlicker {
+            0% {
+                background-color: #ffffff;
+                box-shadow: 0 0 5px rgba(255,255,255,0.5);
+            }
+            25% {
+                background-color: #ff8c42;
+                box-shadow: 0 0 15px rgba(255,140,66,0.8);
+            }
+            50% {
+                background-color: #ff4b08;
+                box-shadow: 0 0 20px rgba(255,75,8,1);
+            }
+            75% {
+                background-color: #ff8c42;
+                box-shadow: 0 0 15px rgba(255,140,66,0.8);
+            }
+            100% {
+                background-color: #ffffff;
+                box-shadow: 0 0 5px rgba(255,255,255,0.5);
+            }
+        }
+
+        body.dark-mode .global-floating-cart {
+            animation: colorFlickerDark 2.5s infinite;
+        }
+
+        @keyframes colorFlickerDark {
+            0% {
+                background-color: #ff4b08;
+                box-shadow: 0 0 5px rgba(255,75,8,0.5);
+            }
+            25% {
+                background-color: #ff8c42;
+                box-shadow: 0 0 15px rgba(255,140,66,0.8);
+            }
+            50% {
+                background-color: #ffaa44;
+                box-shadow: 0 0 20px rgba(255,170,68,1);
+            }
+            75% {
+                background-color: #ff8c42;
+                box-shadow: 0 0 15px rgba(255,140,66,0.8);
+            }
+            100% {
+                background-color: #ff4b08;
+                box-shadow: 0 0 5px rgba(255,75,8,0.5);
+            }
+        }
+
+        /* Hide floating elements on admin-related pages */
+        body.hide-floating .global-floating-lightbulb,
+        body.hide-floating .global-floating-cart {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div><b>Store Management System</b></div>
+    <div>
+        {% if request.user.is_authenticated %}
+            {{ request.user.username }} |
+            <a href="{% url 'logout' %}">Logout</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if messages %}
+    <div class="messages-container">
+        {% for message in messages %}
+            <div class="message
+                {% if message.tags == 'success' %}message-success
+                {% elif message.tags == 'error' %}message-error
+                {% elif message.tags == 'info' %}message-info
+                {% elif message.tags == 'warning' %}message-warning
+                {% else %}message-info{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<!-- Global Floating Elements -->
+<div class="global-floating-lightbulb" id="globalDarkModeToggle">
+    <i class="fa-regular fa-lightbulb"></i>
+</div>
+
+<a href="/cart/" class="global-floating-cart" id="globalCartBtn">
+    <i class="fa-solid fa-cart-plus"></i>
+</a>
+
+<script>
+    // Get current URL path
+    const currentPath = window.location.pathname;
+
+    // List of admin-related URL patterns where floating icons should be hidden
+    const adminPaths = [
+        '/login/',
+        '/login',
+        '/register/',
+        '/register',
+        '/admin-dashboard/',
+        '/add-category/',
+        '/manage-categories/',
+        '/add-product/',
+        '/manage-products/',
+        '/manage-hero-images/',
+        '/admin-statistics/'
+    ];
+
+    // Check if current page is an admin page
+    let isAdminPage = false;
+    for (let i = 0; i < adminPaths.length; i++) {
+        if (currentPath === adminPaths[i] || currentPath.startsWith(adminPaths[i])) {
+            isAdminPage = true;
+            break;
+        }
+    }
+
+    // Also check if it's a delete or update action (admin actions)
+    if (currentPath.includes('/delete-category/') ||
+        currentPath.includes('/delete-product/') ||
+        currentPath.includes('/update-stock/') ||
+        currentPath.includes('/update-price/') ||
+        currentPath.includes('/delete-hero-image/')) {
+        isAdminPage = true;
+    }
+
+    // Add class to body for hiding floating elements on admin pages
+    if (isAdminPage) {
+        document.body.classList.add('hide-floating');
+    }
+
+    // Dark mode toggle - only show on customer-facing pages
+    const toggleButton = document.getElementById('globalDarkModeToggle');
+    const cartButton = document.getElementById('globalCartBtn');
+
+    // Hide floating elements on admin pages (already handled by CSS, but also hide via JS)
+    if (isAdminPage) {
+        if (toggleButton) toggleButton.style.display = 'none';
+        if (cartButton) cartButton.style.display = 'none';
+    }
+
+    function updateLightBulbColor() {
+        if (toggleButton) {
+            if (document.body.classList.contains('dark-mode')) {
+                toggleButton.style.backgroundColor = '#f6aa1c';
+            } else {
+                toggleButton.style.backgroundColor = '#00d6fc';
+            }
+        }
+    }
+
+    // Check for saved preference (only apply on non-admin pages)
+    if (!isAdminPage) {
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            updateLightBulbColor();
+        }
+    }
+
+    if (toggleButton && !isAdminPage) {
+        toggleButton.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            updateLightBulbColor();
+
+            if (document.body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

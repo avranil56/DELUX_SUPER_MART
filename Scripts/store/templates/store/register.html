@@ -1,0 +1,61 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<div style="background-color: white; min-height: 100vh; display: flex; justify-content: center; align-items: center;">
+
+    <div style="max-width: 500px; width: 100%; background: #e67e22; padding: 30px; border-radius: 10px; box-shadow: 0 0 12px rgba(0,0,0,0.2); color: white;">
+
+        <h2 style="text-align: center; margin-bottom: 20px;">Customer Registration</h2>
+
+        {% if error %}
+            <p style="color: #ffe6e6; font-weight: bold; text-align: center;">
+                {{ error }}
+            </p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Username:</label><br>
+            <input type="text" name="username" required
+                   style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;">
+
+            <label>Password:</label><br>
+            <input type="password" name="password" required
+                   style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;">
+
+            <label>Full Name:</label><br>
+            <input type="text" name="name" required
+                   style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;">
+
+            <label>Age:</label><br>
+            <input type="number" name="age" required min="1"
+                   style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none;">
+
+            <label>Sex:</label><br>
+            <select name="sex" required
+                    style="width: 100%; padding: 8px; margin-bottom: 20px; border-radius: 4px; border: none;">
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="Q">Other</option>
+            </select>
+
+            <button type="submit"
+                    style="width: 100%; padding: 10px; background-color: white; color: #e67e22; font-weight: bold; border: none; border-radius: 4px;">
+                Register
+            </button>
+        </form>
+
+        <p style="text-align: center; margin-top: 18px;">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color: white; font-weight: bold; text-decoration: none;">
+                Login
+            </a>
+        </p>
+
+    </div>
+
+</div>
+
+{% endblock %}

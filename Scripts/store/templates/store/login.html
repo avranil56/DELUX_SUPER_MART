@@ -1,0 +1,284 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<style>
+    /* Split View Container */
+    .split-container {
+        display: flex;
+        width: 100%;
+        min-height: calc(100vh - 80px);
+        position: relative;
+        overflow: hidden;
+        margin-top: -30px;
+    }
+
+    /* Half sections */
+    .half {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.5s ease;
+        position: relative;
+        min-height: 100vh;
+    }
+
+    /* Left Half - Admin Side */
+    .admin-half {
+        background-color: #6e8387;
+    }
+
+    /* Right Half - Customer Side - UPDATED COLOR */
+    .customer-half {
+        background-color: #f89795;
+    }
+
+    /* Login Form Containers */
+    .login-form-container {
+        width: 80%;
+        max-width: 380px;
+        padding: 35px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Admin Form */
+    .admin-form {
+        background-color: #0cca4a;
+    }
+
+    /* Customer Form */
+    .customer-form {
+        background-color: #279af1;
+    }
+
+    /* Form Labels */
+    .login-form-container label {
+        color: white;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+    }
+
+    /* Input Fields */
+    .login-form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        border: none;
+        background-color: white;
+        color: black;
+        font-size: 14px;
+        box-sizing: border-box;
+    }
+
+    /* Input focus effect */
+    .login-form-container input:focus {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
+
+    /* Submit Button */
+    .login-form-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: white;
+        color: black;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .login-form-container button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    /* Page Headings (outside form) */
+    .half-heading {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: 1px;
+        font-family: 'Segoe UI', 'Arial Black', 'Georgia', serif;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .admin-heading {
+        color: #0cca4a;
+    }
+
+    .customer-heading {
+        color: #279af1;
+    }
+
+    /* Slider Div */
+    .slider-div {
+        position: fixed;
+        width: 50%;
+        height: 100%;
+        background-color: #2c3e50;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 0 0 30px rgba(0,0,0,0.3);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .slider-div.slide-right {
+        transform: translateX(100%);
+    }
+
+    /* Slider Button */
+    .slider-btn {
+        position: absolute;
+        top: 50%;
+        right: -20px;
+        transform: translateY(-50%);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #ff6b35;
+        border: 3px solid white;
+        color: white;
+        cursor: pointer;
+        font-size: 24px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+        z-index: 101;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    .slider-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+        background-color: #ff8855;
+    }
+
+    /* Register link styling */
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+        color: white;
+    }
+
+    .register-link a {
+        color: white;
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+    .register-link a:hover {
+        opacity: 0.8;
+    }
+
+    /* Error message styling */
+    .error-message {
+        background-color: rgba(255, 77, 77, 0.9);
+        color: white;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        text-align: center;
+        font-size: 14px;
+    }
+</style>
+
+<div class="split-container">
+    <!-- Left Half - Admin Login -->
+    <div class="half admin-half">
+        <div class="half-heading admin-heading">
+            LOG IN SHOP OWNER
+        </div>
+        <div class="login-form-container admin-form">
+            {% if admin_error %}
+                <div class="error-message">{{ admin_error }}</div>
+            {% endif %}
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="login_type" value="admin">
+
+                <label>Username</label>
+                <input type="text" name="username" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <label>Protected PIN (Numeric only)</label>
+                <input type="password" name="admin_pin" pattern="[0-9]*" inputmode="numeric" placeholder="Enter 4-6 digit PIN" required>
+
+                <button type="submit">Login as Shop Owner</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Right Half - Customer Login -->
+    <div class="half customer-half">
+        <div class="half-heading customer-heading">
+            LOG IN CUSTOMER
+        </div>
+        <div class="login-form-container customer-form">
+            {% if customer_error %}
+                <div class="error-message">{{ customer_error }}</div>
+            {% endif %}
+            <form method="POST" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="login_type" value="customer">
+
+                <label>Username</label>
+                <input type="text" name="username" required>
+
+                <label>Password</label>
+                <input type="password" name="password" required>
+
+                <button type="submit">Login as Customer</button>
+            </form>
+            <div class="register-link">
+                Don't have an account? <a href="{% url 'register' %}">Register here</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slider Div -->
+    <div class="slider-div" id="sliderDiv">
+        <button class="slider-btn" id="sliderBtn">
+            <i class="fa-solid fa-angles-right"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    // Slider functionality
+    const sliderDiv = document.getElementById('sliderDiv');
+    const sliderBtn = document.getElementById('sliderBtn');
+    const iconElement = sliderBtn.querySelector('i');
+
+    let isRight = false;
+
+    sliderBtn.addEventListener('click', function() {
+        if (!isRight) {
+            sliderDiv.classList.add('slide-right');
+            iconElement.className = 'fa-solid fa-angles-left';
+            isRight = true;
+        } else {
+            sliderDiv.classList.remove('slide-right');
+            iconElement.className = 'fa-solid fa-angles-right';
+            isRight = false;
+        }
+    });
+</script>
+
+{% endblock %}

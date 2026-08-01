@@ -1,0 +1,62 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<div style="background-color: #3f51b5; padding: 25px; border-radius: 8px; color: white; min-height: 100vh;">
+
+    <h2 style="margin-top: 0;">Manage Categories</h2>
+
+    <div style="height: 4px; width: 80px; background-color: #F4B400; margin: 15px 0 20px 0; border-radius: 4px;"></div>
+
+    {% if error %}
+        <p style="color: #ffdddd; font-weight: bold;">{{ error }}</p>
+    {% endif %}
+
+    <div style="background-color: white; padding: 15px; border-radius: 6px; color: black;">
+
+        <table style="width:100%; border-collapse: collapse;">
+            <tr style="background-color:#F4B400; color:#1a1a1a;">
+                <th style="padding:8px;">ID</th>
+                <th style="padding:8px;">Category Name</th>
+                <th style="padding:8px;">Action</th>
+            </tr>
+
+            {% for category in categories %}
+            <tr>
+                <td style="padding:8px; border-bottom:1px solid #ddd;">{{ category.category_id }}</td>
+                <td style="padding:8px; border-bottom:1px solid #ddd;">{{ category.category_name }}</td>
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    <a href="{% url 'delete_category' category.category_id %}"
+                       style="background-color:#F4B400;
+                              padding:5px 10px;
+                              border-radius:4px;
+                              text-decoration:none;
+                              color:black;
+                              font-weight:bold;">
+                        Delete
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+    </div>
+
+    <!-- Back to Dashboard Button (Updated to #FBBC04 with black text) -->
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{% url 'admin_dashboard' %}"
+           style="display:inline-block;
+                  padding:12px 25px;
+                  background-color:#FBBC04;
+                  color:black;
+                  text-decoration:none;
+                  border-radius:4px;
+                  font-weight:bold;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

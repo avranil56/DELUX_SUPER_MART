@@ -1,0 +1,173 @@
+{% extends "store/base.html" %}
+
+{% block content %}
+
+<style>
+    /* Back most layer - Background colors */
+    body:not(.dark-mode) {
+        background-color: #7c5c3b;
+    }
+
+    body.dark-mode {
+        background-color: #111827;
+    }
+
+    /* Remove default container padding/margin for this page */
+    .container {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Middle layer - Image frame div */
+    .dashboard-frame {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 80px);
+        padding: 40px;
+    }
+
+    .image-container {
+        width: 80%;
+        max-width: 900px;
+        background-color: transparent;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .dashboard-image {
+        width: 100%;
+        height: auto;
+        display: block;
+        object-fit: cover;
+    }
+
+    /* Topmost layer - Buttons overlay on image */
+    .buttons-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        z-index: 20;
+        width: auto;
+    }
+
+    /* Store and Place Order buttons - Compact like backspace button */
+    .dashboard-action-btn {
+        display: block;
+        padding: 10px 24px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 18px;
+        text-align: center;
+        transition: all 0.3s ease;
+        min-width: 160px;
+        letter-spacing: 1px;
+    }
+
+    /* Light mode buttons */
+    .dashboard-action-btn {
+        background-color: #39a2ae;
+        color: #1e3a5f;
+    }
+
+    /* Dark mode buttons */
+    body.dark-mode .dashboard-action-btn {
+        background-color: #8ceeb0;
+        color: #0f3460;
+    }
+
+    .dashboard-action-btn:hover {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+
+    /* Welcome text overlay */
+    .welcome-text {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .welcome-heading {
+        margin: 0 0 5px 0;
+        font-size: 28px;
+        font-family: 'Segoe UI', 'Arial', sans-serif;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        color: #FFFF00;
+    }
+
+    .username-text {
+        font-size: 14px;
+        opacity: 0.9;
+        margin: 0;
+        color: white;
+    }
+
+    body.dark-mode .username-text {
+        color: #e0e0e0;
+    }
+
+    /* Hide the base container's default content styling */
+    .container {
+        position: relative;
+    }
+
+    /* Ensure floating elements are above overlay */
+    .global-floating-lightbulb,
+    .global-floating-cart {
+        z-index: 1001 !important;
+    }
+</style>
+
+<div class="dashboard-frame">
+    <div class="image-container">
+        <!-- Image will be placed here - keep empty for now -->
+        <img src="" alt="Dashboard Background" class="dashboard-image" id="dashboardImage" style="display: none;">
+    </div>
+</div>
+
+<!-- Topmost layer - Buttons overlay -->
+<div class="buttons-overlay">
+    <div class="welcome-text">
+        <h1 class="welcome-heading" id="welcomeHeading">WELCOME</h1>
+        <p class="username-text" id="usernameText">@{{ request.user.username }}</p>
+    </div>
+
+    <a href="{% url 'store_page' %}" class="dashboard-action-btn">
+        🛍 STORE
+    </a>
+
+    <a href="{% url 'place_order' %}" class="dashboard-action-btn">
+        📦 PLACE ORDER
+    </a>
+</div>
+
+<script>
+    // Get customer name from the Django template
+    const customerName = "{{ customer_name }}";
+    const welcomeHeading = document.getElementById('welcomeHeading');
+    if (welcomeHeading && customerName) {
+        welcomeHeading.innerHTML = `WELCOME ${customerName} (^_^)/`;
+    }
+
+    // Image placeholder - you can add your image path here later
+    // Example: document.getElementById('dashboardImage').src = '/media/dashboard/dashboard-bg.jpg';
+    // For now, hide the image container until an image is added
+    const imageContainer = document.querySelector('.image-container');
+    const dashboardImage = document.getElementById('dashboardImage');
+
+    // You can set your image path here when ready
+    // To add an image, uncomment the line below and put your image in media/dashboard/
+    // dashboardImage.src = '/media/dashboard/your-image-name.jpg';
+    // dashboardImage.style.display = 'block';
+</script>
+
+{% endblock %}

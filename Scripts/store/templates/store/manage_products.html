@@ -1,0 +1,150 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div style="background-color: #3f51b5; padding: 25px; border-radius: 8px; color: white;">
+
+    <h1 style="margin-top: 0; font-size: 36px; text-align: left; color: white;">Manage Products</h1>
+
+    <div style="height: 4px; width: 80px; background-color: #F4B400; margin: 15px 0 20px 0; border-radius: 4px;"></div>
+
+    <!-- Back to Dashboard Button -->
+    <div style="margin-bottom:25px;">
+        <a href="{% url 'admin_dashboard' %}"
+           style="display:inline-block;
+                  padding:10px 18px;
+                  background-color:#F4B400;
+                  color:#1a1a1a;
+                  text-decoration:none;
+                  border-radius:4px;
+                  font-weight:bold;">
+            ← Back to Dashboard
+        </a>
+    </div>
+
+    {% for category in categories %}
+    <div style="margin-bottom: 30px; background-color: white; border-radius: 8px; padding: 15px; color: black;">
+
+        <!-- Category Header -->
+        <h3 style="margin-top: 0; color: #3f51b5; border-bottom: 3px solid #F4B400; padding-bottom: 8px;">
+            {{ category.category_name }}
+        </h3>
+
+        {% if category.products.all %}
+        <div style="overflow-x: auto;">
+            <table style="width:100%; border-collapse: collapse; text-align: left;">
+
+                <!-- Table Header with Yellow Background -->
+                <thead>
+                    <tr style="background-color: #F4B400; color: #1a1a1a;">
+                        <th style="padding: 12px; border-radius: 4px 0 0 0;">Sprite</th>
+                        <th style="padding: 12px;">Product Name</th>
+                        <th style="padding: 12px;">Price</th>
+                        <th style="padding: 12px;">Stock</th>
+                        <th style="padding: 12px; border-radius: 0 4px 0 0;">Actions</th>
+                     </tr>
+                </thead>
+
+                <tbody>
+                    {% for product in category.products.all %}
+                    <tr style="border-bottom: 1px solid #e0e0e0;">
+                        <!-- Sprite Column -->
+                        <td style="padding: 15px 12px;">
+                            {% if product.product_sprite %}
+                                <img src="{{ product.product_sprite.url }}" alt="{{ product.product_name }}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;">
+                            {% else %}
+                                <div style="width: 50px; height: 50px; background-color: #f0f0f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #999;">No img</div>
+                            {% endif %}
+                         </td>
+
+                        <!-- Product Name -->
+                        <td style="padding: 15px 12px; font-weight: 500;">
+                            {{ product.product_name }}
+                         </td>
+
+                        <!-- Price with + / - Buttons -->
+                        <td style="padding: 15px 12px;">
+                            <span style="font-weight: bold; margin-right: 10px;">₹{{ product.price }}</span>
+                            <div style="display: inline-block;">
+                                <a href="{% url 'update_price' product.product_id 'increase' %}"
+                                   style="display:inline-block;
+                                          background-color:#F4B400;
+                                          color:#1a1a1a;
+                                          text-decoration:none;
+                                          padding:4px 8px;
+                                          border-radius:4px;
+                                          margin-right:3px;
+                                          font-weight:bold;">
+                                    +
+                                </a>
+                                <a href="{% url 'update_price' product.product_id 'decrease' %}"
+                                   style="display:inline-block;
+                                          background-color:#F4B400;
+                                          color:#1a1a1a;
+                                          text-decoration:none;
+                                          padding:4px 8px;
+                                          border-radius:4px;
+                                          font-weight:bold;">
+                                    −
+                                </a>
+                            </div>
+                         </td>
+
+                        <!-- Stock with + / - Buttons -->
+                        <td style="padding: 15px 12px;">
+                            <span style="font-weight: bold; margin-right: 10px;">{{ product.stock_quantity }}</span>
+                            <div style="display: inline-block;">
+                                <a href="{% url 'update_stock' product.product_id 'increase' %}"
+                                   style="display:inline-block;
+                                          background-color:#F4B400;
+                                          color:#1a1a1a;
+                                          text-decoration:none;
+                                          padding:4px 8px;
+                                          border-radius:4px;
+                                          margin-right:3px;
+                                          font-weight:bold;">
+                                    +
+                                </a>
+                                <a href="{% url 'update_stock' product.product_id 'decrease' %}"
+                                   style="display:inline-block;
+                                          background-color:#F4B400;
+                                          color:#1a1a1a;
+                                          text-decoration:none;
+                                          padding:4px 8px;
+                                          border-radius:4px;
+                                          font-weight:bold;">
+                                    −
+                                </a>
+                            </div>
+                         </td>
+
+                        <!-- Delete Button (Red) -->
+                        <td style="padding: 15px 12px;">
+                            <a href="{% url 'delete_product' product.product_id %}"
+                               style="display:inline-block;
+                                      background-color:#dc3545;
+                                      color:white;
+                                      text-decoration:none;
+                                      padding:6px 12px;
+                                      border-radius:4px;
+                                      font-weight:bold;
+                                      font-size:14px;"
+                               onclick="return confirm('Are you sure you want to delete {{ product.product_name }}?');">
+                                Delete
+                            </a>
+                         </td>
+                     </tr>
+                    {% endfor %}
+                </tbody>
+             </table>
+        </div>
+        {% else %}
+            <p style="text-align: center; padding: 20px; background-color: #f5f5f5; border-radius: 4px;">No products in this category.</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
